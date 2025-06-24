@@ -1,0 +1,6 @@
+rootProject.name = "parts-order-system"
+
+include 'pos-common'
+include 'pos-api-gateway'
+include 'pos-order-service'
+include 'pos-inventory-service'

@@ -1,0 +1,9 @@
+[submodule "pos-api-gateway"]
+	path = pos-api-gateway
+	url = https://github.com/grshin/pos-api-gateway.git
+[submodule "pos-order-service"]
+	path = pos-order-service
+[submodule "pos-inventory-service"]
+	path = pos-inventory-service
+[submodule "pos-common"]
+	path = pos-common
