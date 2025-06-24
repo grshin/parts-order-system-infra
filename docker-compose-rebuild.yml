@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  order-service:
+    container_name: pos-order-service
+    build:
+      context: .
+      dockerfile: pos-order-service/Dockerfile
+    ports:
+      - '8081:8081'
+    networks:
+      - pos-network
+
+  inventory-service:
+    container_name: pos-inventory-service
+    build:
+      context: .
+      dockerfile: pos-inventory-service/Dockerfile
+    ports:
+      - '8082:8082'
+    networks:
+      - pos-network
+
+  api-gateway:
+    container_name: pos-api-gateway
+    build:
+      context: .
+      dockerfile: pos-api-gateway/Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - order-service
+      - inventory-service
+    networks:
+      - pos-network
+
+networks:
+  pos-network:
+    driver: bridge
