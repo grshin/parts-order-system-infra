@@ -10,3 +10,5 @@
 [submodule "pos-order-service"]
     path = pos-order-service
     url = https://github.com/grshin/pos-order-service.git
+[submodule "pos-eureka-server"]
+	path = https://github.com/grshin/pos-eureka-server.git
