@@ -1,42 +1,75 @@
-version: '3.8'
-
 services:
+  eureka-server:
+    container_name: pos-eureka-server
+    image: pos-eureka-server
+    build:
+      context: ./pos-eureka-server
+    ports:
+      - '8761:8761'
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8761']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   order-service:
     container_name: pos-order-service
     image: pos-order-service
     build:
-      context: .
-      dockerfile: pos-order-service/Dockerfile
+      context: ./pos-order-service
+      args:
+        USERNAME: ${GPR_USERNAME}
+        TOKEN: ${GPR_TOKEN}
     ports:
-      - '8081:8081'
+      - '8081:8080'
+    depends_on:
+      - eureka-server
     networks:
-      - pos-network
+      - msa-network
+    environment:
+      - SPRING_APPLICATION_NAME=pos-order-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
 
   inventory-service:
     container_name: pos-inventory-service
     image: pos-inventory-service
     build:
-      context: .
-      dockerfile: pos-inventory-service/Dockerfile
+      context: ./pos-inventory-service
+      args:
+        USERNAME: ${GPR_USERNAME}
+        TOKEN: ${GPR_TOKEN}
     ports:
-      - '8082:8082'
+      - '8082:8080'
+    depends_on:
+      - eureka-server
     networks:
-      - pos-network
+      - msa-network
+    environment:
+      - SPRING_APPLICATION_NAME=pos-inventory-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
 
   api-gateway:
     container_name: pos-api-gateway
     image: pos-api-gateway
     build:
-      context: .
-      dockerfile: pos-api-gateway/Dockerfile
+      context: ./pos-api-gateway
+      args:
+        USERNAME: ${GPR_USERNAME}
+        TOKEN: ${GPR_TOKEN}
     ports:
       - '8080:8080'
     depends_on:
-      - order-service
-      - inventory-service
+      - eureka-server
     networks:
-      - pos-network
+      - msa-network
+    environment:
+      - SPRING_APPLICATION_NAME=pos-api-gateway
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
 
 networks:
-  pos-network:
+  msa-network:
     driver: bridge
