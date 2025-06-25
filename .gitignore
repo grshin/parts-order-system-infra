@@ -1,13 +1,6 @@
 ### Environment 
 .env
 
-### Submodules
-pos-api-gateway/
-pos-eureka-server/
-pos-common/
-pos-inventory-service/
-pos-order-service/
-
 ####
 HELP.md
 .gradle
