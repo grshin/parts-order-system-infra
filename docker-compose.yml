@@ -4,6 +4,9 @@ services:
     image: pos-eureka-server
     build:
       context: ./pos-eureka-server
+      args:
+        USERNAME: ${GPR_USERNAME}
+        TOKEN: ${GPR_TOKEN}
     ports:
       - '8761:8761'
     networks:
